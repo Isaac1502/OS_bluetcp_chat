@@ -1,27 +1,13 @@
 import socket
 import threading
-from abc import ABC, abstractmethod
+from ioHandler import IOHandler
 
-class IOHandler(ABC):
-    @abstractmethod
-    def  accept_client_connection(self):
-        pass
-
-    @abstractmethod
-    def handle_client(self):
-        pass
-
-    @abstractmethod
-    def start_server(self):
-        pass
-
-
-
-class BluetoothServer(IOHandler):
-    def __init__(self,mac):
-        self.mac = mac
+class BluetoothService(IOHandler):
+    def __init__(self, server_address, server_port):
+        self.server_address = server_address
+        self.server_port = server_port
         self.server_socket = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
-        self.server_socket.bind((mac, 4))
+        self.server_socket.bind((server_address, server_port))
         self.clients = []
 
     def accept_client_connection(self):
@@ -55,9 +41,5 @@ class BluetoothServer(IOHandler):
         accept_thread = threading.Thread(target=self.accept_client_connection)
         accept_thread.start()
 
-
-
-blueServer = BluetoothServer("DC:F5:05:5B:39:50")
-blueServer.start_server()
 
     
