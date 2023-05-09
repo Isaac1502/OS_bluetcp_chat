@@ -10,5 +10,5 @@ class IOHandler(ABC):
         pass
 
     @abstractmethod
-    def start_server(self):
+    def start_service(self):
         pass
