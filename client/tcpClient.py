@@ -39,8 +39,8 @@ class TCPClient():
 def main():
     server_addr = input("Enter the ExtIP of the device device to connect: ")
     server_port = int(input("Enter the port: "))
-    bthClient = TCPClient(server_addr, server_port)
-    bthClient.start_client()
+    tcpClient = TCPClient(server_addr, server_port)
+    tcpClient.start_client()
 
 if __name__ == '__main__':
     main()
