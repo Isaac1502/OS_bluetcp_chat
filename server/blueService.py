@@ -34,6 +34,9 @@ class BluetoothService(IOHandler):
                 if data:
                     print(f"Received from {client_address}: {data}")
                     message = input(f"Enter message to {client_address}, RFCOMM protocol: ")
+                    if message == 'exit':
+                        print(f"Client {client_address} disconnected, tcp/ip")
+                        client_socket.close()
                     client_socket.send(message.encode('utf-8'))
 
             except:
@@ -41,10 +44,19 @@ class BluetoothService(IOHandler):
                 # self.clients.remove(threading.current_thread())
                 client_socket.close()
                 return False
-    
+
     def start_service(self):
         self.server_socket.listen(10)
         accept_thread = threading.Thread(target=self.accept_client_connection)
         accept_thread.start()
 
+def main():
+    print("=======================   BLUETOOTH SETTINGS   ==================================")
+    server_addr = input("Enter the MAC address of the bluetooth device: ")
+    server_port = int(input("Enter the port: "))
+    bth = BluetoothService(server_addr, server_port)
+    print("=================================================================================")
+    bth.start_service()
 
+if __name__ == '__main__':
+    main()

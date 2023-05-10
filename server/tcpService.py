@@ -34,19 +34,30 @@ class  TCPService(IOHandler):
                 if data:
                     print(f"Received from {client_address}: {data}")
                     message = input(f"Enter message to {client_address}, tcp/ip: ")
-                    client_socket.send(message.encode('utf-8'))
-                    ans = input("stop connection?(y/n)")
-                    if ans == 'y':
+                    if message == 'exit':
                         print(f"Client {client_address} disconnected, tcp/ip")
                         client_socket.close()
+                    client_socket.send(message.encode('utf-8'))
 
             except:
                 print(f"Client {client_address} disconnected, tcp/ip")
                 # self.clients.remove(threading.current_thread())
                 client_socket.close()
                 return False
-    
+
     def start_service(self):
         self.server_socket.listen(10)
         accept_thread = threading.Thread(target=self.accept_client_connection)
-        accept_thread.start()         
+        accept_thread.start()
+
+
+def main():
+    print("=======================   TCP/IP SETTINGS   ==================================")
+    server_addr = input("Enter the ExtIP address of the device: ")
+    server_port = int(input("Enter the port: "))
+    tcp= TCPService(server_addr, server_port)
+    print("=================================================================================")
+    tcp.start_service()
+
+if __name__ == '__main__':
+    main()
