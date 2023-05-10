@@ -4,6 +4,7 @@ from ioHandler import IOHandler
 
 class BluetoothService(IOHandler):
     def __init__(self, server_address, server_port):
+        self.service_type = "bluetooth"
         self.server_address = server_address
         self.server_port = server_port
         self.server_socket = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
@@ -13,13 +14,17 @@ class BluetoothService(IOHandler):
     def accept_client_connection(self):
         print("Waiting for bluetooth connection...")
 
-        while True:
+        flag = True
+        while flag == True:
             client, addr = self.server_socket.accept()
             print(f"Accepted connection from {addr}, RFCOMM protocol")
             client_thread = threading.Thread(target=self.handle_client, args=(client, addr))
             client_thread.start()
             self.clients.append(client_thread)
-
+            if threading.activeCount() == 0:
+                ans = input("There isn't active connections, stop listening?(y/n)\n")
+                if ans == 'y':
+                    flag = False
 
 
     def handle_client(self, client_socket, client_address):
@@ -33,7 +38,7 @@ class BluetoothService(IOHandler):
 
             except:
                 print(f"Client {client_address} disconnected, RFCOMM protocol")
-                self.clients.remove(threading.current_thread())
+                # self.clients.remove(threading.current_thread())
                 client_socket.close()
                 return False
     
